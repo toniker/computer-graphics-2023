@@ -32,7 +32,7 @@ def interpolate_vectors(p1, p2, v1, v2, xy, dim) -> np.ndarray:
     distance_ratio_to_p2 = 1 - distance_ratio_to_p1
     v = distance_ratio_to_p1 * v1 + distance_ratio_to_p2 * v2
 
-    return v
+    return round(v, 2)
 
 
 if __name__ == "__main__":
