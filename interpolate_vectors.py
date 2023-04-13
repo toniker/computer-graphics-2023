@@ -34,3 +34,14 @@ def interpolate_vectors(p1, p2, v1, v2, xy, dim) -> np.ndarray:
 
     return v
 
+
+if __name__ == "__main__":
+    p1 = [0, 2]
+    p2 = [10, 12]
+    v1 = 0
+    v2 = 10
+    xy = 6
+    dim = 2
+
+    result = interpolate_vectors(p1, p2, v1, v2, xy, dim)
+    print(result)
