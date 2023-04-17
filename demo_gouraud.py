@@ -5,7 +5,7 @@ from shade_types import shade_types
 import time
 
 
-def flats(faces, depth):
+def gouraud(faces, depth):
     pass
 
 
@@ -22,8 +22,8 @@ if __name__ == "__main__":
     # Contains the depth of each edge. Size of L x 1
     depth = np.load("h1.npy", allow_pickle=True).tolist()['depth']
 
-    img = render(verts2d, faces, vcolors, depth, shade_types["flat"])
+    img = render(verts2d, faces, vcolors, depth, shade_types["gouraud"])
 
     execution_time = round(time.time() - start_time, 3)
     print(f"Render finished in {execution_time} seconds")
-    cv.imwrite("flat.jpg", img)
+    cv.imwrite("gouraud.jpg", img)
