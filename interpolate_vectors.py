@@ -1,9 +1,7 @@
 import math
 
-import numpy as np
 
-
-def interpolate_vectors(p1, p2, v1, v2, xy, dim) -> np.ndarray:
+def interpolate_vectors(p1, p2, v1, v2, xy, dim):
     """
     Calculates the value V of a vector, by linearly interpolating between two given vectors. The calculated vector
     must lie on the line between the given vectors.
