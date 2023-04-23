@@ -4,11 +4,6 @@ from render import render
 from shade_types import shade_types
 import time
 
-
-def flats(faces, depth):
-    pass
-
-
 if __name__ == "__main__":
     start_time = time.time()
 
@@ -27,3 +22,4 @@ if __name__ == "__main__":
     execution_time = round(time.time() - start_time, 3)
     print(f"Render finished in {execution_time} seconds")
     cv.imwrite("flat.jpg", img)
+

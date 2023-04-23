@@ -1,18 +1,33 @@
 import numpy as np
 
-from demo_flat import flats
-from demo_gouraud import gouraud
 from shade_types import shade_types
 
 
-def shade_triangle(faces, depth, shade_t):
-    # Get the index for each element of the sorted depth array
-    depth_indexes = np.argsort(depth)
-    faces = faces[depth_indexes]
-
+def shade_triangle(canvas, vertices, colors, shade_t):
     if shade_t == shade_types["flat"]:
-        flats(faces, depth)
+        canvas = flats(canvas, vertices, colors)
     elif shade_t == shade_types["gouraud"]:
-        gouraud(faces, depth)
+        canvas = gouraud(canvas, vertices, colors)
     else:
         raise ValueError("Invalid shading type")
+
+    return canvas
+
+
+def flats(canvas, vertices, colors):
+    x_min, y_min = np.min(vertices, axis=0)
+    x_max, y_max = np.max(vertices, axis=0)
+
+    color = np.mean(colors, axis=0)
+    for x in range(x_min, x_max + 1):
+        for y in range(y_min, y_max + 1):
+            canvas[x, y] = color
+
+    return canvas
+
+
+def gouraud(canvas, vertices, colors):
+    x_min, y_min = np.min(vertices, axis=0)
+    x_max, y_max = np.max(vertices, axis=0)
+
+    return canvas

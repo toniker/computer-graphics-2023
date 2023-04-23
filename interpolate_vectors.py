@@ -42,4 +42,5 @@ if __name__ == "__main__":
     dim = 2
 
     result = interpolate_vectors(p1, p2, v1, v2, xy, dim)
+    assert result == 4.0
     print(result)

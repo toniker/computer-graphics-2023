@@ -5,10 +5,6 @@ from shade_types import shade_types
 import time
 
 
-def gouraud(faces, depth):
-    pass
-
-
 if __name__ == "__main__":
     start_time = time.time()
 
