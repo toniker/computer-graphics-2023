@@ -18,6 +18,7 @@ if __name__ == "__main__":
     depth = np.load("h1.npy", allow_pickle=True).tolist()['depth']
 
     img = render(verts2d, faces, vcolors, depth, shade_types["flat"])
+    img = img * 255
 
     execution_time = round(time.time() - start_time, 3)
     print(f"Render finished in {execution_time} seconds")
