@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 def interpolate_vectors(p1, p2, v1, v2, xy, dim):
@@ -17,11 +18,27 @@ def interpolate_vectors(p1, p2, v1, v2, xy, dim):
     x2, y2 = p2
     x, y = 0, 0
 
+    if y2 == y1 and x2 == x1:
+        return np.mean([v1, v2])
     if dim == 1:
         x = xy
+        if x2 == x1:
+            distance_to_p1 = np.abs(x - x1)
+            distance_to_p2 = np.abs(x - x2)
+            distance_ratio_to_p1 = distance_to_p2 / (distance_to_p1 + distance_to_p2)
+            distance_ratio_to_p2 = 1 - distance_ratio_to_p1
+            v = distance_ratio_to_p1 * v1 + distance_ratio_to_p2 * v2
+            return round(v, 2)
         y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
     elif dim == 2:
         y = xy
+        if y2 == y1:
+            distance_to_p1 = np.abs(y - y1)
+            distance_to_p2 = np.abs(y - y2)
+            distance_ratio_to_p1 = distance_to_p2 / (distance_to_p1 + distance_to_p2)
+            distance_ratio_to_p2 = 1 - distance_ratio_to_p1
+            v = distance_ratio_to_p1 * v1 + distance_ratio_to_p2 * v2
+            return round(v, 2)
         x = x1 + (y - y1) * (x2 - x1) / (y2 - y1)
 
     distance_to_p1 = math.sqrt((x - x1) ** 2 + (y - y1) ** 2)
