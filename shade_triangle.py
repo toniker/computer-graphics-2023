@@ -4,7 +4,7 @@ from shade_types import shade_types
 
 
 class Edge:
-    def __init__(self, x1, y1, x2, y2, is_active):
+    def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -13,7 +13,6 @@ class Edge:
         self.max_x = max(x1, x2)
         self.min_y = min(y1, y2)
         self.max_y = max(y1, y2)
-        self.is_active = is_active
         self.slope = (y2 - y1) / (x2 - x1)
 
     def get_intersecting_x(self, y):
