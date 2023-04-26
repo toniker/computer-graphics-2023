@@ -31,9 +31,9 @@ def get_edges_from_vertices(vertices):
     y1, x1 = vertices[1]
     y2, x2 = vertices[2]
 
-    e0 = Edge(x0, y0, x1, y1, False)
-    e1 = Edge(x1, y1, x2, y2, False)
-    e2 = Edge(x2, y2, x0, y0, False)
+    e0 = Edge(x0, y0, x1, y1)
+    e1 = Edge(x1, y1, x2, y2)
+    e2 = Edge(x2, y2, x0, y0)
 
     return np.array([e0, e1, e2])
 
@@ -63,7 +63,6 @@ def flats(canvas, vertices, colors):
         # Get initial active edges
         if edge.min_y == y_min:
             if edge.slope != 0:
-                edge.is_active = True
                 active_edges = np.append(active_edges, edge)
             else:
                 canvas[edge.min_x:edge.max_x, edge.min_y, :] = color
