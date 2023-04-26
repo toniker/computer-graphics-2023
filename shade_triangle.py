@@ -25,11 +25,6 @@ class Edge:
         assert self.min_x <= x <= self.max_x
         return x
 
-    def get_intersecting_y(self, x):
-        y = self.slope * x + self.x2
-        assert self.min_y <= y <= self.max_y
-        return y
-
 
 def get_edges_from_vertices(vertices):
     y0, x0 = vertices[0]
