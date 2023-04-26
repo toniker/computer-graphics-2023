@@ -87,9 +87,17 @@ def flats(canvas, vertices, colors):
         # Recursively set active edges and vertices
         for edge in edges:
             if edge.min_y == y + 1:
-                active_edges = np.append(active_edges, edge)
+                if edge.slope != 0:
+                    active_edges = np.append(active_edges, edge)
+                else:
+                    canvas[edge.min_x:edge.max_x, edge.min_y, :] = color
             elif edge.max_y == y:
                 active_edges = np.delete(active_edges, np.where(active_edges == edge))
+
+        active_vertices = np.empty((0, 2))
+        for active_edge in active_edges:
+            x = active_edge.get_intersecting_x(y + 1)
+            active_vertices = np.vstack((active_vertices, np.array([x, y + 1])))
 
     return canvas
 
