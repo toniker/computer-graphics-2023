@@ -16,14 +16,7 @@ class Edge:
         self.slope = (y2 - y1) / (x2 - x1)
 
     def get_intersecting_x(self, y):
-        if self.x1 == self.x2:
-            x = self.x1
-        else:
-            offset = self.y1 - self.slope * self.x1
-            x = round((y - offset) / self.slope)
-
-        assert self.min_x <= x <= self.max_x
-        return x
+        return self.x1 + (y - self.y1) * (self.x2 - self.x1) / (self.y2 - self.y1)
 
 
 def get_edges_from_vertices(vertices):
