@@ -27,9 +27,9 @@ class Edge:
 
 
 def get_edges_from_vertices(vertices):
-    y0, x0 = vertices[0]
-    y1, x1 = vertices[1]
-    y2, x2 = vertices[2]
+    x0, y0 = vertices[0]
+    x1, y1 = vertices[1]
+    x2, y2 = vertices[2]
 
     e0 = Edge(x0, y0, x1, y1)
     e1 = Edge(x1, y1, x2, y2)
