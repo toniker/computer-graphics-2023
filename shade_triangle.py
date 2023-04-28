@@ -1,7 +1,6 @@
 import numpy as np
 
 from interpolate_vectors import interpolate_vectors
-from shade_types import shade_types
 
 
 class Edge:
@@ -33,9 +32,9 @@ def get_edges_from_vertices(vertices):
 
 
 def shade_triangle(canvas, vertices, colors, shade_t):
-    if shade_t == shade_types["flat"]:
+    if shade_t == "flat":
         canvas = flats(canvas, vertices, colors)
-    elif shade_t == shade_types["gouraud"]:
+    elif shade_t == "gouraud":
         canvas = gouraud(canvas, vertices, colors)
     else:
         raise ValueError("Invalid shading type")

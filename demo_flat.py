@@ -1,8 +1,9 @@
-import numpy as np
-import cv2 as cv
-from render import render
-from shade_types import shade_types
 import time
+
+import cv2 as cv
+import numpy as np
+
+from render import render
 
 if __name__ == "__main__":
     start_time = time.time()
@@ -17,11 +18,17 @@ if __name__ == "__main__":
     # Contains the depth of each edge. Size of L x 1
     depth = np.load("h1.npy", allow_pickle=True).tolist()['depth']
 
-    img = render(verts2d, faces, vcolors, depth, shade_types["flat"])
+    img = render(verts2d, faces, vcolors, depth, "flat")
+
+    # Set the image type to 8-bit unsigned integer
     img = img * 255
+
+    # Flip the image vertically
     img = img[::-1, :, :]
 
+    # Measure the execution time
     execution_time = round(time.time() - start_time, 3)
     print(f"Render finished in {execution_time} seconds")
-    cv.imwrite("flat.jpg", img)
 
+    # Save the image
+    cv.imwrite("flat.jpg", img)
