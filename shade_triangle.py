@@ -39,7 +39,7 @@ def shade_triangle(canvas, vertices, colors, shade_t):
     if shade_t == "flat":
         canvas = flats(canvas, vertices, colors)
     elif shade_t == "gouraud":
-        canvas = gouraud(canvas, vertices, colors)
+        canvas = gourauds(canvas, vertices, colors)
     else:
         raise ValueError("Invalid shading type")
 
@@ -87,7 +87,7 @@ def flats(canvas, vertices, colors):
     return canvas
 
 
-def gouraud(canvas, vertices, colors):
+def gourauds(canvas, vertices, colors):
     edges = get_edges_from_vertices(vertices)
     y_min = min(edges, key=lambda e: e.min_y).min_y
     y_max = max(edges, key=lambda e: e.max_y).max_y
