@@ -50,46 +50,29 @@ def flats(canvas, vertices, colors):
     color = np.mean(colors, axis=0)
 
     active_edges = np.array([], dtype=Edge)
-    active_vertices = np.empty((0, 2))
-
-    for edge in edges:
-        # Get initial active edges
-        if edge.min_y == y_min:
-            if edge.slope != 0:
-                active_edges = np.append(active_edges, edge)
-            else:
-                canvas[edge.min_x:edge.max_x, edge.min_y, :] = color
-
-    if len(active_edges) < 2:
-        # Can this ever run?
-        return canvas
-
-    # Get initial active vertices
-    for active_edge in active_edges:
-        active_vertices = np.vstack((active_vertices, np.array([active_edge.get_intersecting_x(y_min), y_min])))
-
     for y in range(y_min, y_max + 1):
+        # Set active edges and vertices
+        for edge in edges:
+            if edge.min_y == y and edge.max_y != edge.min_y:
+                active_edges = np.append(active_edges, edge)
+            elif edge.max_y == y:
+                active_edges = np.delete(active_edges, np.where(active_edges == edge))
+
+        if len(active_edges) < 2:
+            return canvas
+
+        active_vertices = np.empty((0, 2))
+        for active_edge in active_edges:
+            x = active_edge.get_intersecting_x(y)
+            active_vertices = np.vstack((active_vertices, np.array([x, y])))
+
         sorted_active_vertices = active_vertices[active_vertices[:, 1].argsort()]
 
         for i in range(0, len(sorted_active_vertices) - 1, 2):
             x1 = int(sorted_active_vertices[i][0])
             x2 = int(sorted_active_vertices[i + 1][0])
-            canvas[x1:x2, y, :] = color
-
-        # Recursively set active edges and vertices
-        for edge in edges:
-            if edge.min_y == y + 1:
-                if edge.slope != 0:
-                    active_edges = np.append(active_edges, edge)
-                else:
-                    canvas[edge.min_x:edge.max_x, edge.min_y, :] = color
-            elif edge.max_y == y:
-                active_edges = np.delete(active_edges, np.where(active_edges == edge))
-
-        active_vertices = np.empty((0, 2))
-        for active_edge in active_edges:
-            x = active_edge.get_intersecting_x(y + 1)
-            active_vertices = np.vstack((active_vertices, np.array([x, y + 1])))
+            x_min, x_max = min(x1, x2), max(x1, x2)
+            canvas[x_min:x_max, y, :] = color
 
     return canvas
 
