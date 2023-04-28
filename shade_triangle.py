@@ -72,8 +72,7 @@ def flats(canvas, vertices, colors):
         for i in range(0, len(active_vertices) - 1, 2):
             x1 = int(active_vertices[i][0])
             x2 = int(active_vertices[i + 1][0])
-            x_min, x_max = min(x1, x2), max(x1, x2)
-            canvas[x_min:x_max, y, :] = color
+            canvas[x1:x2, y, :] = color
 
     return canvas
 
@@ -122,8 +121,7 @@ def gouraud(canvas, vertices, colors):
         for x in range(0, len(active_vertices) - 1, 2):
             x1 = int(active_vertices[x][0])
             x2 = int(active_vertices[x + 1][0])
-            x_min, x_max = min(x1, x2), max(x1, x2)
-            color = interpolate_vectors((x_min, y), (x_max, y), color_a, color_b, x, dim=1)
-            canvas[x_min:x_max, y, :] = color
+            color = interpolate_vectors((x1, y), (x2, y), color_a, color_b, x, dim=1)
+            canvas[x1:x2, y, :] = color
 
     return canvas
