@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     img = render(verts2d, faces, vcolors, depth, shade_types["flat"])
     img = img * 255
-    img = np.rot90(img)
+    img = img[::-1, :, :]
 
     execution_time = round(time.time() - start_time, 3)
     print(f"Render finished in {execution_time} seconds")
