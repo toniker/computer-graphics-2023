@@ -66,11 +66,11 @@ def flats(canvas, vertices, colors):
             x = active_edge.get_intersecting_x(y)
             active_vertices = np.vstack((active_vertices, np.array([x, y])))
 
-        sorted_active_vertices = active_vertices[active_vertices[:, 1].argsort()]
+        active_vertices = active_vertices[active_vertices[:, 1].argsort()]
 
-        for i in range(0, len(sorted_active_vertices) - 1, 2):
-            x1 = int(sorted_active_vertices[i][0])
-            x2 = int(sorted_active_vertices[i + 1][0])
+        for i in range(0, len(active_vertices) - 1, 2):
+            x1 = int(active_vertices[i][0])
+            x2 = int(active_vertices[i + 1][0])
             x_min, x_max = min(x1, x2), max(x1, x2)
             canvas[x_min:x_max, y, :] = color
 
