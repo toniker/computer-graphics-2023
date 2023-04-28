@@ -1,4 +1,5 @@
 import numpy as np
+
 from shade_triangle import shade_triangle
 
 
@@ -26,7 +27,7 @@ def render(verts2d, faces, vcolors, depth, shade_t) -> np.ndarray:
     depth_order = np.array(np.mean(depth[faces], axis=1))
     sorted_triangles = list(np.flip(np.argsort(depth_order)))
 
-    # Loop through all faces, starting by the closest one to the camera
+    # Loop through all faces, starting by the furthest one to the camera
     for triangle in sorted_triangles:
         vertice_indexes = faces[triangle]
         vertices = verts2d[vertice_indexes]
