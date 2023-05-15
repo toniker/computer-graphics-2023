@@ -3,21 +3,22 @@ import time
 import numpy as np
 
 
-def rotmat(θ, u):
+def rotmat(theta, u):
     """
     calculates the rotation matrix R corresponding to clockwise rotation by
-    angle θ in rads about an axis with a direction given by the unit vector u.
-    :param θ: angle
+    angle theta in rads about an axis with a direction given by the unit vector u.
+    :param theta: angle in degrees
     :param u: unit vector
     :return: rotation matrix
     """
     u = u / np.linalg.norm(u)
     x, y, z = u
-    c = np.cos(θ)
-    s = np.sin(θ)
-    R = np.array([[c + x ** 2 * (1 - c), x * y * (1 - c) - z * s, x * z * (1 - c) + y * s],
-                  [y * x * (1 - c) + z * s, c + y ** 2 * (1 - c), y * z * (1 - c) - x * s],
-                  [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z ** 2 * (1 - c)]])
+    theta = np.deg2rad(theta)
+    cos = np.cos(theta)
+    sin = np.sin(theta)
+    R = np.array([[cos + x ** 2 * (1 - cos), x * y * (1 - cos) - z * sin, x * z * (1 - cos) + y * sin],
+                  [y * x * (1 - cos) + z * sin, cos + y ** 2 * (1 - cos), y * z * (1 - cos) - x * sin],
+                  [z * x * (1 - cos) - y * sin, z * y * (1 - cos) + x * sin, cos + z ** 2 * (1 - cos)]])
     return R
 
 
