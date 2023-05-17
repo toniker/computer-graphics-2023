@@ -1,6 +1,7 @@
 import time
 
 import numpy as np
+from shade_triangle import gourauds
 
 
 def rotmat(theta, u):
@@ -24,6 +25,74 @@ def rotmat(theta, u):
     return R
 
 
+def rotate_translate(cp, theta, u, A, t):
+    """
+    Transforms a three-dimensional point, by rotating it around a given axis u by a given angle theta,
+    and then translating it by a given vector t. All coordinates are given in the world coordinate system.
+    :param cp: 3D point
+    :param theta: angle in degrees
+    :param u: unit vector
+    :param A: translation matrix
+    :param t: translation vector
+    :return: transformed 3D point
+    """
+    R = rotmat(theta, u)
+    return np.dot(R, cp) + A + t
+
+
+def change_coordinate_system(cp, R, c0):
+    """
+    Changes the coordinate system of a point from the world coordinate system to the camera coordinate system.
+    :param cp: 3D point
+    :param R: rotation matrix
+    :param c0: camera position
+    :return: transformed 3D point
+    """
+    return np.dot(R, cp - c0)
+
+
+def pin_hole(f, cv, cx, cy, cz, p3d):
+    """
+    Projects a 3D point onto the image plane of a pinhole camera.
+    :param f: Distance from the camera center to the image plane
+    :param cv:
+    :param cx:
+    :param cy:
+    :param cz:
+    :param p3d:
+    :return:
+    """
+    return p2d, depth
+
+
+def camera_looking_at(f, cv, ck, cup, p3d):
+    """
+
+    :param f:
+    :param cv:
+    :param ck:
+    :param cup:
+    :param p3d:
+    :return:
+    """
+    return p2d, depth
+
+
+def rasterize(p2d, rows, columns, h, w):
+    return n2d
+
+
+def render_object(p3d, faces, colors, h, w, rows, columns, f, cv, ck, cup):
+    p2d, depth = camera_looking_at(f, cv, ck, cup, p3d)
+    n2d = rasterize(p2d, rows, columns, h, w)
+    image = render(n2d, faces, colors, depth, h, w)
+    return image
+
+
+def render(p2d, faces, colors, depth, h, w):
+    return image
+
+
 if __name__ == "__main__":
     start_time = time.time()
 
@@ -43,6 +112,9 @@ if __name__ == "__main__":
     phi = data['phi']
     focal = data['focal']
     del data
+
+    # Rotate the object
+    R = rotmat(phi, u)
 
     # Measure the execution time
     execution_time = round(time.time() - start_time, 3)
