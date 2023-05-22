@@ -116,9 +116,26 @@ if __name__ == "__main__":
     # Rotate the object
     R = rotmat(phi, u)
 
+    image = render_object(verts3d, faces, vcolors, height, width, cam_height, cam_width, focal, c_org, c_lookat, c_up)
+    cv2.imwrite("original.png", image)
+
+    verts3d_translated_t1 = rotate_translate(verts3d, 0, u, np.zeros(3), t_1)
+    image = render_object(verts3d_translated_t1, faces, vcolors, height, width, cam_height,
+                          cam_width, focal, c_org, c_lookat,
+                          c_up)
+    cv2.imwrite("t1.png", image)
+
+    verts3d_rotated = rotate_translate(verts3d_translated_t1, phi, u, np.zeros(3), np.zeros(3))
+    image = render_object(verts3d_rotated, faces, vcolors, height, width, cam_height, cam_width, focal, c_org, c_lookat,
+                          c_up)
+    cv2.imwrite("rotated.png", image)
+
+    verts3d_translated_t2 = rotate_translate(verts3d_rotated, 0, u, np.zeros(3), t_2)
+    image = render_object(verts3d_translated_t2, faces, vcolors, height, width, cam_height, cam_width, focal, c_org,
+                          c_lookat, c_up)
+
+    cv2.imwrite("t2.png", image)
+
     # Measure the execution time
     execution_time = round(time.time() - start_time, 3)
     print(f"Render finished in {execution_time} seconds")
-
-    # Save the image
-    # cv.imwrite("render.jpg", img)
