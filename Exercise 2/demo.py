@@ -6,14 +6,14 @@ import numpy as np
 from shade_triangle import gourauds
 
 
-def rotmat(theta, u):
+def rotmat(theta, unit):
     """
     calculates the rotation matrix R corresponding to clockwise rotation by
     angle theta in rads about an axis with a direction given by the unit vector u.
     The array is implemented from the Rotation matrix from axis and angle section of
     https://en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_and_angle
     :param theta: angle in degrees
-    :param u: unit vector
+    :param unit: unit vector
     :return: rotation matrix
     """
     x, y, z = unit / np.linalg.norm(unit)
