@@ -114,9 +114,6 @@ if __name__ == "__main__":
     focal = data['focal']
     del data
 
-    # Rotate the object
-    R = rotmat(phi, u)
-
     image = render_object(verts3d, faces, vcolors, height, width, cam_height, cam_width, focal, c_org, c_lookat, c_up)
     cv2.imwrite("original.png", image)
 
