@@ -2,6 +2,7 @@ import time
 
 import cv2
 import numpy as np
+
 from shade_triangle import gourauds
 
 
@@ -15,15 +16,14 @@ def rotmat(theta, u):
     :param u: unit vector
     :return: rotation matrix
     """
-    u = u / np.linalg.norm(u)
-    x, y, z = u
+    x, y, z = unit / np.linalg.norm(unit)
     theta = np.deg2rad(theta)
     cos = np.cos(theta)
     sin = np.sin(theta)
-    R = np.array([[cos + x ** 2 * (1 - cos), x * y * (1 - cos) - z * sin, x * z * (1 - cos) + y * sin],
+    r = np.array([[cos + x ** 2 * (1 - cos), x * y * (1 - cos) - z * sin, x * z * (1 - cos) + y * sin],
                   [y * x * (1 - cos) + z * sin, cos + y ** 2 * (1 - cos), y * z * (1 - cos) - x * sin],
                   [z * x * (1 - cos) - y * sin, z * y * (1 - cos) + x * sin, cos + z ** 2 * (1 - cos)]])
-    return R
+    return r
 
 
 def rotate_translate(cp, theta, u, A, t):
