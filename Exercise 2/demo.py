@@ -26,72 +26,104 @@ def rotmat(theta, unit):
     return r
 
 
-def rotate_translate(cp, theta, u, A, t):
-    """
-    Transforms a three-dimensional point, by rotating it around a given axis u by a given angle theta,
-    and then translating it by a given vector t. All coordinates are given in the world coordinate system.
-    :param cp: 3D point
-    :param theta: angle in degrees
-    :param u: unit vector
-    :param A: translation matrix
-    :param t: translation vector
-    :return: transformed 3D point
-    """
-    R = rotmat(theta, u)
-    return np.dot(R, cp) + A + t
+def rotate_translate(cp, theta, unit, A, t):
+    r = rotmat(theta, unit)
+    if cp.ndim == 1:
+        cp = cp.reshape((-1, 1))
+
+    centered = cp - A.reshape((-1, 1))
+    rotated = np.dot(r, centered)
+    translated = rotated + A.reshape((-1, 1))
+    return translated + t.reshape((-1, 1))
 
 
-def change_coordinate_system(cp, R, c0):
+def change_coordinate_system(cp, r, c0):
     """
-    Changes the coordinate system of a point from the world coordinate system to the camera coordinate system.
-    :param cp: 3D point
-    :param R: rotation matrix
-    :param c0: camera position
-    :return: transformed 3D point
+    Returns the coordinates of a set of points in a new coordinate system.
     """
-    return np.dot(R, cp - c0)
+    return np.dot(r, cp - c0).T
 
 
 def pin_hole(f, cv, cx, cy, cz, p3d):
-    """
-    Projects a 3D point onto the image plane of a pinhole camera.
-    :param f: Distance from the camera center to the image plane
-    :param cv:
-    :param cx:
-    :param cy:
-    :param cz:
-    :param p3d:
-    :return:
-    """
+    r = np.vstack((cx.T, cy.T, cz.T))
+
+    p3d_ccs = change_coordinate_system(p3d, r, cv)
+
+    depth = p3d_ccs[:, 2]
+
+    x = (f * p3d_ccs[:, 0] / depth)
+    y = (f * p3d_ccs[:, 1] / depth)
+    p2d = np.vstack((x, y))
+
     return p2d, depth
 
 
 def camera_looking_at(f, cv, ck, cup, p3d):
-    """
+    _ck = np.array(ck - cv)
+    cz = _ck / np.linalg.norm(_ck)
+    tilt = np.array(cup - np.dot(cz.flatten(), cup.flatten()) * cz)
+    cy = tilt / np.linalg.norm(tilt)
+    cx = np.cross(cy.flatten(), cz.flatten())
 
-    :param f:
-    :param cv:
-    :param ck:
-    :param cup:
-    :param p3d:
-    :return:
-    """
-    return p2d, depth
+    return pin_hole(f, cv, cx, cy, cz, p3d)
 
 
 def rasterize(p2d, rows, columns, h, w):
+    vertical_ppi = rows / h
+    horizontal_ppi = columns / w
+
+    n2d = np.zeros((p2d.shape[1], 2))
+    for i in range(p2d.shape[1]):
+        n2d[i, 0] = int(p2d[0, i] * horizontal_ppi)
+        n2d[i, 1] = int(p2d[1, i] * vertical_ppi)
+
+    x_offset = int(columns / 2) - int(p2d[:, 0].mean())
+    y_offset = int(rows / 2) - int(p2d[:, 1].mean())
+
+    n2d[:, 0] += x_offset
+    n2d[:, 1] += y_offset
+
     return n2d
 
 
+def render(n2d, faces, colors, depth, rows, columns):
+    img = np.ones((rows, columns, 3))
+
+    depths = np.array([np.mean(depth[face]) for face in faces])
+    sorted_indices = np.argsort(depths)[::-1]
+
+    for i in sorted_indices:
+        face = faces[i]
+        vertices = n2d[face]
+        color = colors[face]
+        img = gourauds(img, vertices, color)
+
+    return img
+
+
 def render_object(p3d, faces, colors, h, w, rows, columns, f, cv, ck, cup):
+    """
+    Renders the object
+    :param p3d:  3D points of the object, shape (L, 3)
+    :param faces: the indices of the vertices of each face, shape (M, 3)
+    :param colors: the colors of the vertices, shape (L, 3)
+    :param h: height of the camera
+    :param w: width of the camera
+    :param rows: height of the image
+    :param columns: width of the image
+    :param f: distance of the camera to the image plane
+    :param cv: center of the camera as per the world coordinate system
+    :param ck: target of the camera as per the world coordinate system (non-homogeneous)
+    :param cup: up vector of the camera as per the world coordinate system (non-homogeneous)
+    :return: the image
+    """
     p2d, depth = camera_looking_at(f, cv, ck, cup, p3d)
+
     n2d = rasterize(p2d, rows, columns, h, w)
-    image = render(n2d, faces, colors, depth, h, w)
-    return image
 
+    img = render(n2d, faces, colors, depth, rows, columns)
 
-def render(p2d, faces, colors, depth, h, w):
-    return image
+    return img * 255
 
 
 if __name__ == "__main__":
@@ -114,22 +146,21 @@ if __name__ == "__main__":
     focal = data['focal']
     del data
 
-    image = render_object(verts3d, faces, vcolors, height, width, cam_height, cam_width, focal, c_org, c_lookat, c_up)
+    image = render_object(verts3d, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat, c_up)
     cv2.imwrite("original.png", image)
 
     verts3d_translated_t1 = rotate_translate(verts3d, 0, u, np.zeros(3), t_1)
-    image = render_object(verts3d_translated_t1, faces, vcolors, height, width, cam_height,
-                          cam_width, focal, c_org, c_lookat,
-                          c_up)
+    image = render_object(verts3d_translated_t1, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
+                          c_lookat, c_up)
     cv2.imwrite("t1.png", image)
 
     verts3d_rotated = rotate_translate(verts3d_translated_t1, phi, u, np.zeros(3), np.zeros(3))
-    image = render_object(verts3d_rotated, faces, vcolors, height, width, cam_height, cam_width, focal, c_org, c_lookat,
+    image = render_object(verts3d_rotated, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat,
                           c_up)
     cv2.imwrite("rotated.png", image)
 
     verts3d_translated_t2 = rotate_translate(verts3d_rotated, 0, u, np.zeros(3), t_2)
-    image = render_object(verts3d_translated_t2, faces, vcolors, height, width, cam_height, cam_width, focal, c_org,
+    image = render_object(verts3d_translated_t2, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
                           c_lookat, c_up)
 
     cv2.imwrite("t2.png", image)
