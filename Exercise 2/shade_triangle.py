@@ -89,11 +89,11 @@ def flats(canvas, vertices, colors):
 
 def gourauds(canvas, vertices, colors):
     edges = get_edges_from_vertices(vertices)
-    y_min = round(min(edges, key=lambda e: e.min_y).min_y)
-    y_max = round(max(edges, key=lambda e: e.max_y).max_y)
+    y_min = min(edges, key=lambda e: e.min_y).min_y
+    y_max = max(edges, key=lambda e: e.max_y).max_y
 
     active_edges = np.array([], dtype=Edge)
-    for y in range(y_min, min(y_max + 1, canvas.shape[1])):
+    for y in range(y_min, y_max + 1):
         # Set active edges
         for edge in edges:
             # If the edge is not horizontal and the start of the edge is at the current y
