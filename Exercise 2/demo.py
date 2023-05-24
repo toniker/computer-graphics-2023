@@ -73,12 +73,12 @@ def pin_hole(f, cv, cx, cy, cz, p3d):
     """
     r = np.vstack((cx.T, cy.T, cz.T))
 
-    p3d_ccs = change_coordinate_system(p3d, r, cv)
+    p3d_camera = change_coordinate_system(p3d, r, cv)
 
-    depth = p3d_ccs[:, 2]
+    depth = p3d_camera[:, 2]
 
-    x = (f * p3d_ccs[:, 0] / depth)
-    y = (f * p3d_ccs[:, 1] / depth)
+    x = (f * p3d_camera[:, 0] / depth)
+    y = (f * p3d_camera[:, 1] / depth)
     p2d = np.vstack((x, y))
 
     return p2d, depth
@@ -132,6 +132,16 @@ def rasterize(p2d, rows, columns, h, w):
 
 
 def render(n2d, faces, colors, depth, rows, columns):
+    """
+    renders the object
+    :param n2d: the 2D points
+    :param faces: the indexes of the vertices of each face
+    :param colors: the colors of the vertices
+    :param depth: the depth of each face
+    :param rows: the number of vertical pixels
+    :param columns: the number of horizontal pixels
+    :return: the rendered image
+    """
     img = np.ones((rows, columns, 3))
 
     depths = np.array([np.sum(depth[face]) for face in faces])
@@ -194,21 +204,21 @@ if __name__ == "__main__":
     image = render_object(verts3d, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat, c_up)
     cv2.imwrite("original.jpg", image)
 
-    # verts3d_translated_t1 = rotate_translate(verts3d, 0, u, np.zeros(3), t_1)
-    # image = render_object(verts3d_translated_t1, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
-    #                       c_lookat, c_up)
-    # cv2.imwrite("t1.jpg", image)
-    #
-    # verts3d_rotated = rotate_translate(verts3d_translated_t1, phi, u, np.zeros(3), np.zeros(3))
-    # image = render_object(verts3d_rotated, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat,
-    #                       c_up)
-    # cv2.imwrite("rotated.jpg", image)
-    #
-    # verts3d_translated_t2 = rotate_translate(verts3d_rotated, 0, u, np.zeros(3), t_2)
-    # image = render_object(verts3d_translated_t2, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
-    #                       c_lookat, c_up)
-    #
-    # cv2.imwrite("t2.jpg", image)
+    verts3d_translated_t1 = rotate_translate(verts3d, 0, u, np.zeros(3), t_1)
+    image = render_object(verts3d_translated_t1, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
+                          c_lookat, c_up)
+    cv2.imwrite("t1.jpg", image)
+
+    verts3d_rotated = rotate_translate(verts3d_translated_t1, phi, u, np.zeros(3), np.zeros(3))
+    image = render_object(verts3d_rotated, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat,
+                          c_up)
+    cv2.imwrite("rotated.jpg", image)
+
+    verts3d_translated_t2 = rotate_translate(verts3d_rotated, 0, u, np.zeros(3), t_2)
+    image = render_object(verts3d_translated_t2, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
+                          c_lookat, c_up)
+
+    cv2.imwrite("t2.jpg", image)
 
     # Measure the execution time
     execution_time = round(time.time() - start_time, 3)
