@@ -39,12 +39,12 @@ def rotate_translate(cp, theta, unit, A, t):
     if cp.ndim == 1:
         cp = cp.reshape((-1, 1))
 
-    centered = cp - A.reshape((-1, 1))
+    centered = np.dot(np.linalg.inv(A), cp)
 
     r = rotmat(theta, unit)
     rotated = np.dot(r, centered)
 
-    translated = rotated + A.reshape((-1, 1))
+    translated = np.dot(A, rotated)
 
     return translated + t.reshape((-1, 1))
 
@@ -204,17 +204,18 @@ if __name__ == "__main__":
     image = render_object(verts3d, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat, c_up)
     cv2.imwrite("original.jpg", image)
 
-    verts3d_translated_t1 = rotate_translate(verts3d, 0, u, np.zeros(3), t_1)
+    A = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    verts3d_translated_t1 = rotate_translate(verts3d, 0, u, A, t_1)
     image = render_object(verts3d_translated_t1, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
                           c_lookat, c_up)
     cv2.imwrite("t1.jpg", image)
 
-    verts3d_rotated = rotate_translate(verts3d_translated_t1, phi, u, np.zeros(3), np.zeros(3))
+    verts3d_rotated = rotate_translate(verts3d_translated_t1, phi, u, A, np.zeros(3))
     image = render_object(verts3d_rotated, faces, vcolors, cam_height, cam_width, height, width, focal, c_org, c_lookat,
                           c_up)
     cv2.imwrite("rotated.jpg", image)
 
-    verts3d_translated_t2 = rotate_translate(verts3d_rotated, 0, u, np.zeros(3), t_2)
+    verts3d_translated_t2 = rotate_translate(verts3d_rotated, 0, u, A, t_2)
     image = render_object(verts3d_translated_t2, faces, vcolors, cam_height, cam_width, height, width, focal, c_org,
                           c_lookat, c_up)
 
