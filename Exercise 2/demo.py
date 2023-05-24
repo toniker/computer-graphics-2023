@@ -99,6 +99,7 @@ def camera_looking_at(f, cv, ck, cup, p3d):
     tilt = np.array(cup - np.dot(cz.flatten(), cup.flatten()) * cz)
     cy = tilt / np.linalg.norm(tilt)
     cx = np.cross(cy.flatten(), cz.flatten())
+    cx = cx.reshape((-1, 1))
 
     return pin_hole(f, cv, cx, cy, cz, p3d)
 
