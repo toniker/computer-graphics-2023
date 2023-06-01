@@ -41,6 +41,24 @@ def calculate_normals(verts, faces):
     return normals
 
 
+def light(point, normal, vcolor, cam_pos, mat, lights):
+    """
+    Calculates the lighting of a point, which belongs to a Phong material, given the diffused, specular and reflected
+    light
+    :param point: The 3D point
+    :param normal: The surface normal
+    :param vcolor: The color of the point
+    :param cam_pos: The position of the camera
+    :param mat: The Phong material
+    :param lights: a list of PointLight objects
+    :return: The intensity of the color of the point
+    """
+    I = np.zeros((1, 3))
+
+
+    return I
+
+
 def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, vert_colors, faces, mat, n, lights,
                   light_amb):
     img = np.ones((M, N, 3)) * bg_color
