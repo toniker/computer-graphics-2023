@@ -44,7 +44,6 @@ def calculate_normals(verts, faces):
         v1 = verts[face[1]]
         v2 = verts[face[2]]
 
-        # Calculate the normal vector
         normal = np.cross(v1 - v0, v2 - v0)
         normal /= np.linalg.norm(normal)
 
