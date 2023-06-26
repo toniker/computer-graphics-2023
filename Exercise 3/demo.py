@@ -6,6 +6,13 @@ import numpy as np
 
 class PhongMaterial:
     def __init__(self, ka, kd, ks, n):
+        """
+        Initializes a Phong material
+        :param ka: The ambient coefficient
+        :param kd: The diffusion coefficient
+        :param ks: The specular coefficient
+        :param n: The Phong exponent
+        """
         self.ka = ka
         self.kd = kd
         self.ks = ks
@@ -41,13 +48,13 @@ def calculate_normals(verts, faces):
     return normals
 
 
-def light(point, normal, vcolor, cam_pos, mat, lights):
+def light(point, normal, color, cam_pos, mat, lights):
     """
     Calculates the lighting of a point, which belongs to a Phong material, given the diffused, specular and reflected
     light
-    :param point: The 3D point
-    :param normal: The surface normal
-    :param vcolor: The color of the point
+    :param point: A (3,1) array representing the point
+    :param normal: The (3,1) vector of the surface normal
+    :param color: The color of the point
     :param cam_pos: The position of the camera
     :param mat: The Phong material
     :param lights: a list of PointLight objects
@@ -61,6 +68,27 @@ def light(point, normal, vcolor, cam_pos, mat, lights):
 
 def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, vert_colors, faces, mat, n, lights,
                   light_amb):
+    """
+    Renders an object given the vertices, faces, material and lights
+    :param shader: The shader to use
+    :param focal: The focal length
+    :param eye: The position of the camera
+    :param lookat: The vector pointed where the camera is looking at
+    :param up: The camera up vector
+    :param bg_color: The background color
+    :param M: The height of the image
+    :param N: The width of the image
+    :param H: The height of the image plane
+    :param W: The width of the image plane
+    :param verts: The vertices of the object
+    :param vert_colors: The colors of the vertices
+    :param faces: The faces of the object
+    :param mat: The Phong material
+    :param n: The Phong exponent
+    :param lights: A list of PointLight objects
+    :param light_amb: The ambient light
+    :return:
+    """
     img = np.ones((M, N, 3)) * bg_color
 
     return img
