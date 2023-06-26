@@ -70,6 +70,16 @@ def light(point, normal, color, cam_pos, mat, lights):
     return I
 
 
+def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img):
+
+    return img
+
+
+def shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img):
+
+    return img
+
+
 def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, vert_colors, faces, mat, n, lights,
                   light_amb):
     """
