@@ -91,6 +91,11 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     """
     img = np.ones((M, N, 3)) * bg_color
 
+    if shader == 'gouraud':
+        img = shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
+    elif shader == 'phong':
+        img = shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
+
     return img
 
 
