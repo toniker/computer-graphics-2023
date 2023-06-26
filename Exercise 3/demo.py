@@ -122,12 +122,13 @@ if __name__ == "__main__":
     shaders = ['gouraud', 'phong']
     lighting_models = ['ambient', 'diffusion', 'specular', 'all']
 
+    lights = [PointLight(light_positions[i], light_intensities[i]) for i in range(len(light_positions))]
+    mat = PhongMaterial(ka, kd, ks, n)
+    light_amb = np.full((1, 3), Ia)
+
     for shader in shaders:
         for lighting_model in lighting_models:
-            # lights = [point lights]
-            # mat = phong material
             # faces as for calculate_normals
-            # light_amb = [I_r, I_g, I_b]^T
             img = render_object(shader, focal, cam_eye, cam_lookat, cam_up, bg_color, M, N, H, W, verts, vertex_colors,
                                 faces, mat, n, lights, light_amb)
 
