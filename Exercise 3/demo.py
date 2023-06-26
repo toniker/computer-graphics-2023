@@ -21,6 +21,11 @@ class PhongMaterial:
 
 class PointLight:
     def __init__(self, position, intensity):
+        """
+        Initializes a point light object
+        :param position: A (3,1) array representing the position of the light
+        :param intensity: A (3,1) array representing the intensity of the light for each color
+        """
         self.position = position
         self.intensity = intensity
 
