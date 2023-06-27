@@ -66,8 +66,25 @@ def light(point, normal, color, cam_pos, mat, lights):
     """
     I = np.zeros((1, 3))
 
+    I_a = mat.ka * Ia
+    I += I_a
 
-    return I
+    for _light in lights:
+        light_vector = _light.position - point
+        light_vector /= np.linalg.norm(light_vector)
+
+        reflection_vector = 2 * normal * np.dot(normal, light_vector) - light_vector
+        reflection_vector /= np.linalg.norm(reflection_vector)
+
+        view_vector = cam_pos - point
+        view_vector /= np.linalg.norm(view_vector)
+
+        I_d = _light.intensity * mat.kd * np.dot(normal, light_vector)
+        I_s = _light.intensity * mat.ks * np.dot(reflection_vector, view_vector) ** mat.n
+
+        I += I_d + I_s
+
+    return I * color
 
 
 def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img):
