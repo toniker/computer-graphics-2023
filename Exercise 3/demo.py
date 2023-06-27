@@ -88,12 +88,40 @@ def light(point, normal, color, cam_pos, mat, lights):
 
 
 def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img):
+    """
+    Shades the object using the Gouraud shading method
+    :param verts_p:
+    :param verts_n:
+    :param verts_c:
+    :param bcoords: The barycentric coordinates of the point
+    :param cam_pos: The position of the camera
+    :param mat: The Phong material
+    :param lights: A list of PointLight objects
+    :param light_amb: The ambient light
+    :param img: The image
+    :return: The image with the object shaded
+    """
 
+    ...
     return img
 
 
 def shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img):
+    """
+    Shades the object using the Phong shading method
+    :param verts_p:
+    :param verts_n:
+    :param verts_c:
+    :param bcoords: The barycentric coordinates of the point
+    :param cam_pos: The position of the camera
+    :param mat: The Phong material
+    :param lights: A list of PointLight objects
+    :param light_amb: The ambient light
+    :param img: The image
+    :return: The image with the object shaded
+    """
 
+    ...
     return img
 
 
