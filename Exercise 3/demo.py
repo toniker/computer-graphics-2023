@@ -149,7 +149,15 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     :return:
     """
     img = np.ones((M, N, 3)) * bg_color
+    del bg_color
+    # Calculate the normal vectors of the faces
+    verts_n = calculate_normals(verts, faces)
 
+    # Project the edges of the triangles to the image plane
+    # using the pin_hole function of exercise 2
+
+    # for triangle in triangles:
+    # call the below functions based on the depth of the triangle, starting from the furthest one
     if shader == 'gouraud':
         img = shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
     elif shader == 'phong':
