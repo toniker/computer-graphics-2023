@@ -195,8 +195,11 @@ if __name__ == "__main__":
     lighting_models = ['ambient', 'diffusion', 'specular', 'all']
 
     lights = [PointLight(light_positions[i], light_intensities[i]) for i in range(len(light_positions))]
+    del light_positions, light_intensities
     mat = PhongMaterial(ka, kd, ks, n)
+    del ka, kd, ks
     light_amb = np.full((1, 3), Ia)
+    del Ia
 
     for shader in shaders:
         for lighting_model in lighting_models:
