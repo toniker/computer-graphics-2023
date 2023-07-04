@@ -174,7 +174,7 @@ if __name__ == "__main__":
     data = np.load("h3.npy", allow_pickle=True).tolist()
     verts = data['verts']
     vertex_colors = data['vertex_colors']
-    face_indices = data['face_indices']
+    face_indices = data['face_indices'].T
     cam_eye = data['cam_eye']
     cam_up = data['cam_up']
     cam_lookat = data['cam_lookat']
@@ -207,7 +207,7 @@ if __name__ == "__main__":
         for lighting_model in lighting_models:
             # faces as for calculate_normals
             img = render_object(shader, focal, cam_eye, cam_lookat, cam_up, bg_color, M, N, H, W, verts, vertex_colors,
-                                faces, mat, n, lights, light_amb)
+                                face_indices, mat, n, lights, light_amb)
 
             cv2.imwrite(f"output_{shader}_{lighting_model}.png", img)
 
