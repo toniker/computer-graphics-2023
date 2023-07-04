@@ -34,3 +34,25 @@ def pin_hole(f, cv, cx, cy, cz, p3d):
     p2d = np.vstack((x, y))
 
     return p2d, depth
+
+
+def camera_looking_at(f, cv, ck, cup, p3d):
+    """
+    calculates the 2D coordinates of a set of 3D points in the image plane of a camera
+    :param f: the focal length of the camera
+    :param cv: the center of the camera
+    :param ck: the target of the camera
+    :param cup: the up vector of the camera
+    :param p3d: the 3D points
+    :return: the 2D coordinates of the points in the image plane
+    """
+    _ck = np.array(ck - cv)
+    cz = _ck / np.linalg.norm(_ck)
+    tilt = np.array(cup - np.dot(cz.flatten(), cup.flatten()) * cz)
+    cy = tilt / np.linalg.norm(tilt)
+    cx = np.cross(cy.flatten(), cz.flatten())
+    cx = cx.reshape((-1, 1))
+
+    return pin_hole(f, cv, cx, cy, cz, p3d)
+
+

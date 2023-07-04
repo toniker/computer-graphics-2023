@@ -3,6 +3,8 @@ import time
 import cv2
 import numpy as np
 
+from exercise_2_functions import camera_looking_at
+
 
 class PhongMaterial:
     def __init__(self, ka, kd, ks, n):
