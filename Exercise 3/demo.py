@@ -68,8 +68,8 @@ def light(point, normal, color, cam_pos, mat, lights):
     """
     I = np.zeros((1, 3))
 
-    I_a = mat.ka * Ia
-    I += I_a
+    I_ambient = mat.ka * Ia
+    I += I_ambient
 
     for _light in lights:
         light_vector = _light.position - point
