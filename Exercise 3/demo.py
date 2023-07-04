@@ -152,18 +152,35 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     """
     img = np.ones((M, N, 3)) * bg_color
     del bg_color
-    # Calculate the normal vectors of the faces
-    verts_n = calculate_normals(verts, faces)
 
-    # Project the edges of the triangles to the image plane
-    # using the pin_hole function of exercise 2
+    vert_normals = calculate_normals(verts, faces)
 
-    # for triangle in triangles:
-    # call the below functions based on the depth of the triangle, starting from the furthest one
+    vert_points, depths = camera_looking_at(focal, eye, lookat, up, verts)
+
+    barycentric_coords = np.zeros((faces.shape[0], 3))
+    for i, face in enumerate(faces):
+        v0 = verts[face[0]]
+        v1 = verts[face[1]]
+        v2 = verts[face[2]]
+        barycentric_coords[i] = (v0 + v1 + v2) / 3
+
+    cam_pos = eye
+
+    sorted_depths = np.argsort(depths)
     if shader == 'gouraud':
-        img = shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
+        for i in sorted_depths:
+            verts_p = vert_points[i]
+            verts_n = vert_normals[i]
+            verts_c = vert_colors[i]
+            bcoords = barycentric_coords[i]
+            img = shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
     elif shader == 'phong':
-        img = shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
+        for i in sorted_depths:
+            verts_p = vert_points[i]
+            verts_n = vert_normals[i]
+            verts_c = vert_colors[i]
+            bcoords = barycentric_coords[i]
+            img = shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
 
     return img
 
