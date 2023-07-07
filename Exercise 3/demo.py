@@ -70,7 +70,8 @@ def light(point, normal, color, cam_pos, mat, lights):
     I = np.zeros((1, 3))
 
     I_ambient = mat.ka * Ia
-    I += I_ambient
+    if lighting_model == 'ambient' or lighting_model == 'all':
+        I += I_ambient
 
     for _light in lights:
         light_vector = _light.position - point
@@ -85,7 +86,10 @@ def light(point, normal, color, cam_pos, mat, lights):
         I_d = _light.intensity * mat.kd * np.dot(normal, light_vector)
         I_s = _light.intensity * mat.ks * np.dot(reflection_vector, view_vector) ** mat.n
 
-        I += I_d + I_s
+        if lighting_model == 'diffusion' or lighting_model == 'all':
+            I += I_d
+        if lighting_model == 'specular' or lighting_model == 'all':
+            I += I_s
 
     return I * color
 
