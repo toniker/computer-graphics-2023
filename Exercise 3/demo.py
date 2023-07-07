@@ -113,7 +113,7 @@ def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, ligh
     for i, point in enumerate(verts_p):
         light_on_vertices[i] = light(bcoords, verts_n[i], verts_c[i], cam_pos, mat, lights)
 
-    ...
+    img = gourauds(img, verts_p, light_on_vertices)
     return img
 
 
