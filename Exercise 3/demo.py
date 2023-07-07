@@ -108,6 +108,10 @@ def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, ligh
     :param img: The image.
     :return: The image with the object shaded.
     """
+    verts_p = verts_p.T
+    light_on_vertices = np.zeros((verts_p.shape[0], 3))
+    for i, point in enumerate(verts_p):
+        light_on_vertices[i] = light(bcoords, verts_n[i], verts_c[i], cam_pos, mat, lights)
 
     ...
     return img
