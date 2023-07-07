@@ -145,6 +145,6 @@ def gourauds(canvas, vertices, colors):
             color = interpolate_vectors((x1, y), (x2, y), color_a, color_b, x, dim=1)
 
             # Set the color of the pixels between the two vertices
-            canvas[x1:x2, y, :] = color
+            canvas[y, x1:x2, :] = color
 
     return canvas
