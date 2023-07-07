@@ -226,7 +226,7 @@ if __name__ == "__main__":
             img = render_object(shader, focal, cam_eye, cam_lookat, cam_up, bg_color, M, N, H, W, verts, vertex_colors,
                                 face_indices, mat, n, lights, light_amb)
 
-            cv2.imwrite(f"output_{shader}_{lighting_model}.png", img)
+            cv2.imwrite(f"{shader}_{lighting_model}.png", img)
 
     # Measure the execution time
     execution_time = round(time.time() - start_time, 3)
