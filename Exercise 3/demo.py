@@ -199,8 +199,8 @@ if __name__ == "__main__":
 
     data = np.load("h3.npy", allow_pickle=True).tolist()
     verts = data['verts']
-    vertex_colors = data['vertex_colors'].T
-    face_indices = data['face_indices'].T
+    vertex_colors = data['vertex_colors']
+    face_indices = data['face_indices']
     cam_eye = data['cam_eye']
     cam_up = data['cam_up']
     cam_lookat = data['cam_lookat']
@@ -222,20 +222,18 @@ if __name__ == "__main__":
     shaders = ['gouraud', 'phong']
     lighting_models = ['ambient', 'diffusion', 'specular', 'all']
 
-    lights = [PointLight(light_positions[i], light_intensities[i]) for i in range(len(light_positions))]
+    lights = [PointLight(position=light_positions[i], intensity=light_intensities[i]) for i in
+              range(len(light_positions))]
     del light_positions, light_intensities
     mat = PhongMaterial(ka, kd, ks, n)
     del ka, kd, ks
-    light_amb = np.full((1, 3), Ia)
-    del Ia
 
     for shader in shaders:
         for lighting_model in lighting_models:
-            # faces as for calculate_normals
             img = render_object(shader, focal, cam_eye, cam_lookat, cam_up, bg_color, M, N, H, W, verts, vertex_colors,
-                                face_indices, mat, n, lights, light_amb)
+                                face_indices, mat, n, lights, Ia)
 
-            cv2.imwrite(f"output_{shader}_{lighting_model}.png", img)
+            cv2.imwrite(f"{shader}_{lighting_model}.png", img)
 
     # Measure the execution time
     execution_time = round(time.time() - start_time, 3)
