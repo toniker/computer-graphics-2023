@@ -162,9 +162,8 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     :return:
     """
     img = np.ones((M, N, 3)) * bg_color
-    del bg_color
 
-    vert_normals = calculate_normals(verts.T, faces)
+    vert_normals = calculate_normals(verts, faces)
 
     vert_points, depths = camera_looking_at(focal, eye, lookat, up, verts.T)
 
