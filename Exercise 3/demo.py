@@ -3,7 +3,8 @@ import time
 import cv2
 import numpy as np
 
-from exercise_2_functions import camera_looking_at
+from exercise_2_functions import camera_looking_at, rasterize
+from shade_triangle import gourauds
 
 
 class PhongMaterial:
