@@ -70,8 +70,7 @@ def light(point, normal, color, cam_pos, mat, lights):
     I = np.zeros((1, 3))
 
     I_ambient = mat.ka * Ia
-    if lighting_model == 'ambient' or lighting_model == 'all':
-        I += I_ambient
+    I += I_ambient
 
     for _light in lights:
         light_vector = _light.position - point
@@ -86,10 +85,7 @@ def light(point, normal, color, cam_pos, mat, lights):
         I_d = _light.intensity * mat.kd * np.dot(normal, light_vector)
         I_s = _light.intensity * mat.ks * np.dot(reflection_vector, view_vector) ** mat.n
 
-        if lighting_model == 'diffusion' or lighting_model == 'all':
-            I += I_d
-        if lighting_model == 'specular' or lighting_model == 'all':
-            I += I_s
+        I += I_d + I_s
 
     return I * color
 
@@ -108,12 +104,12 @@ def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, ligh
     :param img: The image.
     :return: The image with the object shaded.
     """
-    verts_p = verts_p.T
-    light_on_vertices = np.zeros((verts_p.shape[0], 3))
-    for i, point in enumerate(verts_p):
-        light_on_vertices[i] = light(bcoords, verts_n[i], verts_c[i], cam_pos, mat, lights)
 
-    img = gourauds(img, verts_p, light_on_vertices)
+    light_at_vertices = np.zeros_like(verts_c)
+    for i, vert in enumerate(verts_p):
+        light_at_vertices[i] = light(bcoords, verts_n[i], verts_c[i], cam_pos, mat, lights)
+
+    img = gourauds(img, verts_p, light_at_vertices)
     return img
 
 
@@ -162,23 +158,27 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     img = np.ones((M, N, 3)) * bg_color
     del bg_color
 
-    vert_normals = calculate_normals(verts, faces)
+    vert_normals = calculate_normals(verts.T, faces)
 
-    vert_points, depths = camera_looking_at(focal, eye, lookat, up, verts)
+    vert_points, depths = camera_looking_at(focal, eye, lookat, up, verts.T)
 
-    barycentric_coords = np.zeros((faces.shape[0], 3))
+    barycentric_coords = np.zeros_like(faces)
+
+    _verts = verts.T
     for i, face in enumerate(faces):
-        v0 = verts[face[0]]
-        v1 = verts[face[1]]
-        v2 = verts[face[2]]
+        v0 = _verts[face[0]]
+        v1 = _verts[face[1]]
+        v2 = _verts[face[2]]
         barycentric_coords[i] = (v0 + v1 + v2) / 3
 
     cam_pos = eye
 
+    n2d = rasterize(vert_points, M, N, H, W)
+
     sorted_depths = np.argsort(depths)
     if shader == 'gouraud':
         for i in sorted_depths:
-            verts_p = vert_points[i]
+            verts_p = n2d[i]
             verts_n = vert_normals[i]
             verts_c = vert_colors[i]
             bcoords = barycentric_coords[i]
@@ -199,7 +199,7 @@ if __name__ == "__main__":
 
     data = np.load("h3.npy", allow_pickle=True).tolist()
     verts = data['verts']
-    vertex_colors = data['vertex_colors']
+    vertex_colors = data['vertex_colors'].T
     face_indices = data['face_indices'].T
     cam_eye = data['cam_eye']
     cam_up = data['cam_up']
@@ -235,7 +235,7 @@ if __name__ == "__main__":
             img = render_object(shader, focal, cam_eye, cam_lookat, cam_up, bg_color, M, N, H, W, verts, vertex_colors,
                                 face_indices, mat, n, lights, light_amb)
 
-            cv2.imwrite(f"{shader}_{lighting_model}.png", img)
+            cv2.imwrite(f"output_{shader}_{lighting_model}.png", img)
 
     # Measure the execution time
     execution_time = round(time.time() - start_time, 3)

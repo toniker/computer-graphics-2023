@@ -9,7 +9,7 @@ def change_coordinate_system(cp, r, c0):
     :param c0: translation vector
     :return: the coordinates of the points in the new coordinate system
     """
-    return np.dot(cp - c0, r)
+    return np.dot(cp - c0, r).T
 
 
 def pin_hole(f, cv, cx, cy, cz, p3d):
@@ -81,5 +81,5 @@ def rasterize(p2d, rows, columns, h, w):
     n2d[0, :] += x_offset
     n2d[1, :] += y_offset
 
-    return n2d.T
+    return n2d
 
