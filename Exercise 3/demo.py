@@ -40,19 +40,21 @@ def calculate_normals(verts, faces):
     :param faces: The faces of the object.
     :return: The normal vectors for each face.
     """
-    normals = np.zeros((faces.shape[0], 3))
+    _faces = faces.T
+    _verts = verts.T
+    normals = np.zeros_like(_faces, dtype=np.float64)
 
-    for i, face in enumerate(faces):
-        v0 = verts[face[0]]
-        v1 = verts[face[1]]
-        v2 = verts[face[2]]
+    for i, face in enumerate(_faces):
+        v0 = _verts[face[0]]
+        v1 = _verts[face[1]]
+        v2 = _verts[face[2]]
 
         normal = np.cross(v1 - v0, v2 - v0)
         normal /= np.linalg.norm(normal)
 
         normals[i] = normal
 
-    return normals
+    return normals.T
 
 
 def light(point, normal, color, cam_pos, mat, lights):
