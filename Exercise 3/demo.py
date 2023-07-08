@@ -183,16 +183,18 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     sorted_depths = np.argsort(depths)
     if shader == 'gouraud':
         for i in sorted_depths:
-            verts_p = n2d[i]
-            verts_n = vert_normals[i]
-            verts_c = vert_colors[i]
+            face = faces[i]
+            verts_p = n2d[face].transpose()
+            verts_n = vert_normals[face]
+            verts_c = vert_colors[face]
             bcoords = barycentric_coords[i]
             img = shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
     elif shader == 'phong':
         for i in sorted_depths:
-            verts_p = vert_points[i]
-            verts_n = vert_normals[i]
-            verts_c = vert_colors[i]
+            face = faces[i]
+            verts_p = n2d[face].transpose()
+            verts_n = vert_normals[face]
+            verts_c = vert_colors[face]
             bcoords = barycentric_coords[i]
             img = shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
 
