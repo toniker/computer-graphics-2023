@@ -56,3 +56,30 @@ def camera_looking_at(f, cv, ck, cup, p3d):
     return pin_hole(f, cv, cx, cy, cz, p3d)
 
 
+def rasterize(p2d, rows, columns, h, w):
+    """
+    Rasterizes the 2D points
+    :param p2d: the 2d points
+    :param rows: the number of vertical pixels
+    :param columns: the number of horizontal pixels
+    :param h: the height of the camera
+    :param w: the width of the camera
+    :return: the rasterized 2D points
+    """
+    vertical_ppi = rows / h
+    horizontal_ppi = columns / w
+
+    n2d = p2d
+    n2d[0, :] *= horizontal_ppi
+    n2d[1, :] *= vertical_ppi
+
+    n2d = n2d.astype(int)
+
+    x_offset = int(columns / 2) - int(n2d[1, :].mean())
+    y_offset = int(rows / 2) - int(n2d[0, :].mean())
+
+    n2d[0, :] += x_offset
+    n2d[1, :] += y_offset
+
+    return n2d
+
