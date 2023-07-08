@@ -9,7 +9,7 @@ def change_coordinate_system(cp, r, c0):
     :param c0: translation vector
     :return: the coordinates of the points in the new coordinate system
     """
-    return np.dot(r, cp - c0).T
+    return np.dot(cp - c0, r).T
 
 
 def pin_hole(f, cv, cx, cy, cz, p3d):
