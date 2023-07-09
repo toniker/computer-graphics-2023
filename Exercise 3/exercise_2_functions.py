@@ -66,8 +66,8 @@ def rasterize(p2d, rows, columns, h, w):
     :param w: the width of the camera
     :return: the rasterized 2D points
     """
-    vertical_ppi = rows / h
-    horizontal_ppi = columns / w
+    vertical_ppi = rows // h
+    horizontal_ppi = columns // w
 
     n2d = p2d
     n2d[0, :] *= horizontal_ppi
@@ -75,11 +75,11 @@ def rasterize(p2d, rows, columns, h, w):
 
     n2d = n2d.astype(int)
 
-    x_offset = int(columns / 2) - int(n2d[1, :].mean())
-    y_offset = int(rows / 2) - int(n2d[0, :].mean())
+    x_offset = int(rows / 2) - int(n2d[0, :].mean())
+    y_offset = int(columns / 2) - int(n2d[1, :].mean())
 
     n2d[0, :] += x_offset
     n2d[1, :] += y_offset
 
-    return n2d
+    return n2d.T
 
