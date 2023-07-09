@@ -221,13 +221,6 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
     vert_points, depths = camera_looking_at(focal, eye, lookat, up, verts)
 
     _verts = verts.T
-    barycentric_coords = np.zeros_like(_verts)
-
-    for i, face in enumerate(faces):
-        v0 = _verts[face[0]]
-        v1 = _verts[face[1]]
-        v2 = _verts[face[2]]
-        barycentric_coords[i] = (v0 + v1 + v2) / 3
 
     cam_pos = eye
 
@@ -245,7 +238,7 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
             verts_p = n2d[face]
             verts_n = _vert_normals[face]
             verts_c = _vert_colors[face]
-            bcoords = barycentric_coords[i]
+            bcoords = np.mean(verts[:, face], axis=0)
             img = shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
     elif shader == 'phong':
         for i in sorted_depths:
@@ -253,7 +246,7 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
             verts_p = n2d[face]
             verts_n = _vert_normals[face]
             verts_c = _vert_colors[face]
-            bcoords = barycentric_coords[i]
+            bcoords = np.mean(verts[:, face], axis=0)
             img = shade_phong(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, light_amb, img)
 
     return img * 255
