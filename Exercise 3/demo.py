@@ -233,7 +233,8 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
 
     n2d = rasterize(vert_points, M, N, H, W)
 
-    sorted_depths = np.argsort(depths)
+    depths = np.mean(depths[faces], axis=0)
+    sorted_depths = np.argsort(depths)[::-1]
     _faces = faces.T
     _vert_normals = vert_normals.T
     _vert_colors = vert_colors.T
