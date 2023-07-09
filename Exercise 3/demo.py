@@ -4,7 +4,8 @@ import cv2
 import numpy as np
 
 from exercise_2_functions import camera_looking_at, rasterize
-from shade_triangle import gourauds
+from shade_triangle import gourauds, get_edges_from_vertices, Edge
+from interpolate_vectors import interpolate_vectors
 
 
 class PhongMaterial:
@@ -40,21 +41,22 @@ def calculate_normals(verts, faces):
     :param faces: The faces of the object.
     :return: The normal vectors for each face.
     """
-    _faces = faces.T
-    _verts = verts.T
-    normals = np.zeros_like(_faces, dtype=np.float64)
+    normals = np.zeros_like(faces, dtype=np.float64)
 
-    for i, face in enumerate(_faces):
-        v0 = _verts[face[0]]
-        v1 = _verts[face[1]]
-        v2 = _verts[face[2]]
+    for i, face in enumerate(faces.T):
+        v0 = verts[:, face[0]]
+        v1 = verts[:, face[1]]
+        v2 = verts[:, face[2]]
 
         normal = np.cross(v1 - v0, v2 - v0)
         normal /= np.linalg.norm(normal)
 
-        normals[i] = normal
+        normals[:, face[0]] += normal
+        normals[:, face[1]] += normal
+        normals[:, face[2]] += normal
 
-    return normals.T
+    normals = normals / np.linalg.norm(normals, axis=0)
+    return normals
 
 
 def light(point, normal, color, cam_pos, mat, lights):
