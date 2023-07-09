@@ -113,11 +113,9 @@ def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, ligh
     :param img: The image.
     :return: The image with the object shaded.
     """
-
     light_at_vertices = np.zeros_like(verts_c)
-    _verts_p = verts_p.T
-    for i in range(len(_verts_p)):
-        light_at_vertices[i] = light(_verts_p[i], verts_n[i], verts_c[i], cam_pos, mat, lights)
+    for i in range(len(verts_p)):
+        light_at_vertices[i] = light(bcoords, verts_n[i], verts_c[i], cam_pos, mat, lights, light_amb)
 
     img = gourauds(img, verts_p, light_at_vertices)
     return img
