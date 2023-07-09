@@ -4,7 +4,7 @@ from interpolate_vectors import interpolate_vectors
 
 
 class Edge:
-    def __init__(self, x1, y1, x2, y2):
+    def __init__(self, x1, y1, x2, y2, normals=None, colors=None):
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -13,6 +13,8 @@ class Edge:
         self.max_x = max(x1, x2)
         self.min_y = min(y1, y2)
         self.max_y = max(y1, y2)
+        self.normals = normals
+        self.colors = colors
 
     def get_intersecting_x(self, y):
         """
@@ -20,17 +22,35 @@ class Edge:
         :param y: The y coordinate
         :return: The x coordinate
         """
+        if not self.min_y <= y <= self.max_y:
+            return None
+        if self.y1 == self.y2:
+            return (self.x1 + self.x2) // 2
         return self.x1 + (y - self.y1) * (self.x2 - self.x1) / (self.y2 - self.y1)
 
 
-def get_edges_from_vertices(vertices):
+def get_edges_from_vertices(vertices, normals=None, colors=None):
+    c0 = c1 = c2 = None
+    if colors is not None:
+        colors = colors.T
+        c0 = colors[0]
+        c1 = colors[1]
+        c2 = colors[2]
+
+    n0 = n1 = n2 = None
+    if normals is not None:
+        normals = normals.T
+        n0 = normals[0]
+        n1 = normals[1]
+        n2 = normals[2]
+
     x0, y0 = vertices[0]
     x1, y1 = vertices[1]
     x2, y2 = vertices[2]
 
-    e0 = Edge(x0, y0, x1, y1)
-    e1 = Edge(x1, y1, x2, y2)
-    e2 = Edge(x2, y2, x0, y0)
+    e0 = Edge(x0, y0, x1, y1, [n0, n1], [c0, c1])
+    e1 = Edge(x1, y1, x2, y2, [n1, n2], [c1, c2])
+    e2 = Edge(x2, y2, x0, y0, [n2, n0], [c2, c0])
 
     return np.array([e0, e1, e2])
 
