@@ -59,7 +59,7 @@ def calculate_normals(verts, faces):
     return normals
 
 
-def light(point, normal, color, cam_pos, mat, lights):
+def light(point, normal, color, cam_pos, mat, lights, light_amb):
     """
     Calculates the lighting of a point, which belongs to a Phong material, given the diffused, specular and reflected
     light.
@@ -69,11 +69,12 @@ def light(point, normal, color, cam_pos, mat, lights):
     :param cam_pos: The position of the camera.
     :param mat: The Phong material.
     :param lights: a list of PointLight objects.
+    :param light_amb: The ambient light intensity.
     :return: The intensity of the color of the point.
     """
     I = np.zeros(3)
 
-    I_ambient = mat.ka * Ia
+    I_ambient = mat.ka * light_amb
     if lighting_model == 'ambient' or lighting_model == 'all':
         I += I_ambient
 
