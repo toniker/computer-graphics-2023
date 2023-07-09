@@ -122,6 +122,20 @@ def shade_gouraud(verts_p, verts_n, verts_c, bcoords, cam_pos, mat, lights, ligh
 
 
 def shade_phong(vertices, normals, colors, bcoords, cam_pos, mat, lights, light_amb, img):
+    """
+    Shades the object using the Phong shading method. The function interpolates the normals and colors for each pixel
+    and then uses the light method to calculate its color value.
+    :param vertices: The positions of the vertices.
+    :param normals: The normals of the vertices.
+    :param colors: The colors of the vertices.
+    :param bcoords: The barycentric coordinates of the object.
+    :param cam_pos: The position of the camera.
+    :param mat: The material.
+    :param lights: A list of PointLight objects.
+    :param light_amb: The ambient light.
+    :param img: The image.
+    :return: The image with the object shaded.
+    """
     edges = get_edges_from_vertices(vertices)
     y_min = min(edges, key=lambda e: e.min_y).min_y
     y_max = max(edges, key=lambda e: e.max_y).max_y
@@ -155,7 +169,7 @@ def shade_phong(vertices, normals, colors, bcoords, cam_pos, mat, lights, light_
         color2_a_index = \
             np.equal(vertices, (active_edges[0].x2, active_edges[0].y2)).all(axis=1).nonzero()[0].tolist()[0]
 
-        # Interpolate the colors of the vertices in the y direction
+        # Interpolate the colors and normals of the vertices in the y direction
         color_a = interpolate_vectors((active_edges[0].x1, active_edges[0].y1),
                                       (active_edges[0].x2, active_edges[0].y2), colors[color1_a_index],
                                       colors[color2_a_index], y, dim=2)
@@ -179,7 +193,7 @@ def shade_phong(vertices, normals, colors, bcoords, cam_pos, mat, lights, light_
             x1 = int(active_vertices[x][0])
             x2 = int(active_vertices[x + 1][0])
 
-            # Interpolate the colors of the vertices in the x direction
+            # Interpolate the colors and normals of the vertices in the x direction
             color = interpolate_vectors((x1, y), (x2, y), color_a, color_b, x, dim=1)
             normal = interpolate_vectors((x1, y), (x2, y), normal_a, normal_b, x, dim=1)
 
@@ -220,14 +234,14 @@ def render_object(shader, focal, eye, lookat, up, bg_color, M, N, H, W, verts, v
 
     vert_points, depths = camera_looking_at(focal, eye, lookat, up, verts)
 
-    _verts = verts.T
-
     cam_pos = eye
 
     n2d = rasterize(vert_points, M, N, H, W)
 
+    # Calculate the depth of each face, based on the average depth of its vertices
     depths = np.mean(depths[faces], axis=0)
     sorted_depths = np.argsort(depths)[::-1]
+
     _faces = faces.T
     _vert_normals = vert_normals.T
     _vert_colors = vert_colors.T
