@@ -39,3 +39,8 @@ Exercise 3 introduces more advanced shading and lighting techniques to create a 
 
 These new methods produce higher quality renders, and the difference between the results of Exercise 1 and Exercise 3 are shown below.
 
+# Image from Exercise 1
+![exercise_1](https://github.com/toniker/computer-graphics-2023/assets/39350193/891d95b3-9eca-430d-b88a-9d7a99472e78)
+
+# Image from Exercise 3
+![exercise_3](https://github.com/toniker/computer-graphics-2023/assets/39350193/d4a4cdfb-540f-40cc-afe7-8df9a8743894)
