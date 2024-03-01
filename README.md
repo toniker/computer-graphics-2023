@@ -1,4 +1,4 @@
-# Computer Grphics AUTh 2023
+# Computer Graphics AUTh 2023
 
 This repository contains the source code for the three exercises of the course Computer Graphics, taken at the school of Electrical and Computer Engineering during the summer semester of 2023.
 
